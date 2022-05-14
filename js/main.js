@@ -4,9 +4,10 @@
 let btnCalculate = document.querySelector('#calculate'),
   btnClear = document.querySelector('#clear');
 
-let input = document.querySelector('#values');
+let elm_input = document.querySelector('#values');
 
-let elm_error = document.querySelector('.error__message'),
+let elm_error = document.querySelector('.error__message-main'),
+  elm_error_position = document.querySelector('.error__message-items'),
   elm_sum = document.querySelector('.item--sum'),
   elm_average = document.querySelector('.item--average'),
   elm_quantity = document.querySelector('.item--quantity');
@@ -15,8 +16,10 @@ let str_values, arr_values, sum, average, quantity;
 
 // SET INITAL VALUES
 const init = function () {
-  input.value = ``;
+  elm_input.value = ``;
+  elm_input.classList.remove('throwError');
   elm_error.innerHTML = `&nbsp;`;
+  elm_error_position.innerHTML = `&nbsp;`;
   elm_sum.innerHTML = `&nbsp;`;
   elm_average.innerHTML = `&nbsp;`;
   elm_quantity.innerHTML = `&nbsp;`;
@@ -57,42 +60,100 @@ function appendDecimals(value) {
   return value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-function checkInput(str) {
+function hasNumbers(arr) {
   let regex = /\d/;
-  return regex.test(str);
+  return regex.test(arr);
+}
+
+function hasAlphabet(arr) {
+  let regex = /[a-zA-Z]/;
+  return regex.test(arr);
+}
+
+function hasSpecial(arr) {
+  let regex = /[\/\\\^\$~!@#%&\*\(\)\_\+=\]\[}{"':;<>,\?|]/;
+  return regex.test(arr);
+}
+
+function endswithHyphen(arr) {
+  let regex = /-$/;
+  return regex.test(arr);
+}
+
+// LOOP THROUGH ARRAY TO FIND BAD VALUES
+function validateArr(arr) {
+  let badArr = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    if (arr == '' || arr == null || arr == undefined) {
+      badArr = ['&nbsp;'];
+      elm_error.innerHTML = `Input field is blank.`;
+    } else if (!hasNumbers(arr)) {
+      badArr = ['&nbsp;'];
+      elm_error.innerHTML = `Enter numeric values only.`;
+    } else if (
+      hasAlphabet(arr[i]) ||
+      hasSpecial(arr[i]) ||
+      endswithHyphen(arr[i])
+    ) {
+      elm_error.innerHTML = `Found a bad value. Please remove:`;
+      badArr.push(arr[i]);
+    }
+  }
+
+  if (badArr.length > 0) {
+    elm_error_position.innerHTML = `${badArr.join(' ')}`;
+    elm_input.classList.add('throwError');
+    resetCalculation();
+  } else {
+    elm_input.classList.remove('throwError');
+    elm_error.innerHTML = `&nbsp;`;
+    elm_error_position.innerHTML = `&nbsp;`;
+    calculate();
+  }
+}
+
+function resetCalculation() {
+  elm_sum.innerHTML = `&nbsp;`;
+  elm_average.innerHTML = `&nbsp;`;
+  elm_quantity.innerHTML = `&nbsp;`;
+}
+
+function displayCalculation() {
+  elm_sum.innerHTML = `${sum}`;
+  elm_average.innerHTML = `${average}`;
+  elm_quantity.innerHTML = `${arr_values.length}`;
+}
+
+function returnNumber(value) {
+  if (typeof value === 'number') return value;
 }
 
 const calculate = function () {
-  str_values = input.value; // returns a long string
+  arr_values = convertValues(arr_values); // returns an array of numbers
+  arr_values = arr_values.filter(returnNumber); // filters out space values
+  sum = calculateSum(arr_values); // return a sum of the array
+  average = calcAverage(sum, arr_values.length); // return the average of the array
 
-  if (str_values == '' || str_values == null || str_values == undefined) {
-    elm_error.innerHTML = `Input field is blank.`;
-    elm_sum.innerHTML = `&nbsp;`;
-    elm_average.innerHTML = `&nbsp;`;
-    elm_quantity.innerHTML = `&nbsp;`;
-  } else if (!checkInput(str_values)) {
-    elm_error.innerHTML = `Enter numeric values only.`;
-    elm_sum.innerHTML = `&nbsp;`;
-    elm_average.innerHTML = `&nbsp;`;
-    elm_quantity.innerHTML = `&nbsp;`;
-  } else {
-    arr_values = str_values.split(' '); // returns an array of strings
-    arr_values = arr_values.filter(Number); // removes any none number elements
-    arr_values = convertValues(arr_values); // returns an array of numbers
-    sum = calculateSum(arr_values); // return a sum of the array
-    average = calcAverage(sum, arr_values.length); // return the average of the array
+  // returns a string at two decimal points
+  sum = appendDecimals(sum);
+  average = appendDecimals(average);
 
-    // returns a string at two decimal points
-    sum = appendDecimals(sum);
-    average = appendDecimals(average);
-
-    // set the values in the dom
-    elm_error.innerHTML = `&nbsp;`;
-    elm_sum.innerHTML = sum;
-    elm_average.innerHTML = average;
-    elm_quantity.innerHTML = arr_values.length;
-  }
+  displayCalculation();
 };
 
-btnCalculate.addEventListener('click', calculate);
+// on ENTER, focus on calculate button
+elm_input.addEventListener('keydown', function (e) {
+  if (e.keyCode === 13) {
+    btnCalculate.focus();
+  }
+});
+
+btnCalculate.addEventListener('click', function () {
+  str_values = elm_input.value; // returns a long string
+  arr_values = str_values.split(' '); // returns an array of strings
+
+  validateArr(arr_values);
+});
+
 btnClear.addEventListener('click', init);
