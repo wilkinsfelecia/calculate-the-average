@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital@0;1&display=swap');
+
+*,
+*:before,
+*:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-size: 62.5%; // 10px / 16px * 100 = 62.5%
+  font-family: 'Jost', sans-serif;
+
+  --color-green-1: #749c75;
+  --color-green-2: #b2bd7e;
+  --color-white: #fff;
+  --color-black: #000;
+
+  --linear-gradient: linear-gradient(
+    275deg,
+    var(--color-green-1),
+    var(--color-green-2)
+  );
+}
+
+body {
+  margin: 0 auto;
+  background-image: var(--linear-gradient);
+  font-size: 1.75rem;
+  padding: 5rem;
+  height: 100%;
+  width: 55%;
+
+  @include respond(tab-land) {
+    width: 100%;
+  }
+
+  @include respond(phone) {
+    padding: 2.5rem;
+    font-size: 1.45rem;
+  }
+}
+
+::selection {
+  background-color: var(--color-green-1);
+  color: var(--color-white);
+}
+
+.u-text-center {
+  text-align: center;
+}
+
+.btn {
+  border: 0;
+  outline: 0;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-green-1);
+  color: var(--color-white);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s;
+  font-family: 'Jost', sans-serif;
+
+  &:not(:last-child) {
+    margin-right: 1.5rem;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: var(--color-green-2);
+    color: var(--color-black);
+  }
+
+  @include respond(phone) {
+    display: block;
+    width: 100%;
+
+    &:not(:last-child) {
+      margin-bottom: 1.5rem;
+    }
+  }
+}

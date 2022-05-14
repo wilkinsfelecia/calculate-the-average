@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8" />
+   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <link rel="shortcut icon" type="image/jpg" href="./favicon.jpg" />
+   <title>Calculate the Average</title>
+
+   <link rel="stylesheet" href="./css/main.css">
+</head>
+
+<body>
+   <main class="container">
+      <section class="calculate">
+         <div class="heading u-text-center">
+            <h2 class="heading__h">Calculate the Average</h2>
+            <p class="heading__p">Separate values with spaces.</p>
+         </div>
+
+         <div class="calculate__form">
+            <div class="form__group">
+               <textarea name="values" id="values" class="form__textarea"></textarea>
+            </div>
+
+            <div class="form__group u-text-center">
+               <button type="button" class="btn" id="calculate">Calculate</button>
+               <button type="button" class="btn" id="clear">Clear</button>
+            </div>
+         </div>
+         </div>
+      </section>
+
+      <section class="error u-text-center">
+         <p class="error__message error__message-main">&nbsp;</p>
+         <p class="error__message error__message-items">&nbsp;</p>
+      </section>
+
+      <section class="results u-text-center">
+         <table class="results__table">
+            <thead class="results__table-thead">
+               <tr class="results__table-tr">
+                  <td class="results__table-td">Sum:</td>
+                  <td class="results__table-td">Average:</td>
+                  <td class="results__table-td">Quantity:</td>
+               </tr>
+            </thead>
+            <tbody class="results__table-tbody">
+               <tr class="results__table-tr">
+                  <td class="results__table-td item--sum">&nbsp;</td>
+                  <td class="results__table-td item--average">&nbsp;</td>
+                  <td class="results__table-td item--quantity">&nbsp;</td>
+               </tr>
+            </tbody>
+         </table>
+      </section>
+
+      <script type="text/javascript" src="./js/main.js"></script>
+</body>
+
+</html>
